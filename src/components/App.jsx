@@ -1,5 +1,5 @@
 import React from 'react';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import Searchbar from './Searchbar/Searchbar';
 import ImageGallery from './ImageGallery/ImageGallery';
 import ModalWindow from '../components/share/Modal/ModalWindow';
@@ -42,18 +42,18 @@ export const App = () => {
     setPage(1);
   };
 
-  const loadMore = () => {
+  const loadMore = useCallback(() => {
     setPage(prevPage => prevPage + 1)
-  };
+  }, []);
 
-  const toggleModal = () => {
+  const toggleModal = useCallback(() => {
     setModal(prevState => !prevState)
-  }
+  }, [])
 
   const addModalImg = modalImg => {
     setModalImg(modalImg)
   }
-
+  
   return (
     <div className='App'>
       <Searchbar onSubmit={searchImages} />
