@@ -53,7 +53,7 @@ export const App = () => {
   const addModalImg = modalImg => {
     setModalImg(modalImg)
   }
-  
+
   return (
     <div className='App'>
       <Searchbar onSubmit={searchImages} />

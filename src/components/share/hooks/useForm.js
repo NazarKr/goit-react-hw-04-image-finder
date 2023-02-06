@@ -1,7 +1,5 @@
 import { useState, useCallback } from 'react';
 
-// const initialState = { search: '' };
-
 const useForm = ({ initialState, onSubmit }) => {
   const [state, setState] = useState({ ...initialState });
 
@@ -16,11 +14,9 @@ const useForm = ({ initialState, onSubmit }) => {
     e.preventDefault();
     onSubmit(state.search);
     setState({ ...initialState });
-    }
-    
-    return { state, setState, handleChange, hendleSubmit };
+  };
 
-//   const { search } = state;
+  return { state, setState, handleChange, hendleSubmit };
 };
 
 export default useForm;

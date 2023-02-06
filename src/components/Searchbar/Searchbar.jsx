@@ -8,19 +8,6 @@ const initialState = { search: '' };
 const Searchbar = ({ onSubmit }) => {
     const { state, handleChange, hendleSubmit } = useForm({ initialState, onSubmit });
 
-    // const handleChange = useCallback(e => {
-    //     const { name, value } = e.target;
-    //     setState(prevState => {
-    //         return { ...prevState, [name]: value };
-    //     });
-    // }, []);
-
-    // function hendleSubmit(e) {
-    //     e.preventDefault();
-    //     onSubmit(state.search);
-    //     setState({ ...initialState });
-    // }
-
     const { search } = state;
 
     return (
