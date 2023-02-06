@@ -1,11 +1,9 @@
 import React from "react";
-// import '../Styles/styles.css'
+import '../share/Styles/styles.css'
 import ImageGalleryItem from '../ImageGalleryItem/ImageGalleryItem';
 import Button from '../share/Button/Button';
 
-//  onClick, setImg, items, loadMore, loading
-
-const ImageGallery = ({ items, loadMore, loading }) => {
+const ImageGallery = ({ onClick, setImg, items, loadMore, loading }) => {
     const shouldRenderLoadMoreButton = items.length > 0 && !loading;
 
     return (
@@ -15,8 +13,8 @@ const ImageGallery = ({ items, loadMore, loading }) => {
                     const { id } = item;
                     return (
                         <ImageGalleryItem
-                            // onClick={onClick}
-                            // setImg={setImg}
+                            onClick={onClick}
+                            setImg={setImg}
                             key={id}
                             item={item}
                         />

@@ -1,20 +1,26 @@
-import React from 'react';
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import ButtonIcon from '../share/Button/ButtonIcon';
 import { ImSearch } from 'react-icons/im';
 
+const initialState = { search: '' };
+
 const Searchbar = ({ onSubmit }) => {
-    const [search, setSearch] = useState('')
+    const [state, setState] = useState({ ...initialState });
 
-    const hendleChange = event => {
-        setSearch(event.target.value.toLowerCase());
-    };
+    const handleChange = useCallback(e => {
+        const { name, value } = e.target;
+        setState(prevState => {
+            return { ...prevState, [name]: value };
+        });
+    }, []);
 
-    const hendleSubmit = e => {
+    function hendleSubmit(e) {
         e.preventDefault();
-        onSubmit(setSearch);
-        e.target.reset()
-    };
+        onSubmit(state.search);
+        setState({ ...initialState });
+    }
+
+    const { search } = state;
 
     return (
         <header className="Searchbar">
@@ -31,7 +37,7 @@ const Searchbar = ({ onSubmit }) => {
                     name="search"
                     type="text"
                     value={search}
-                    onChange={hendleChange}
+                    onChange={handleChange}
                     // autoComplete="off"
                     autoFocus
                     required
@@ -43,66 +49,3 @@ const Searchbar = ({ onSubmit }) => {
 }
 
 export default Searchbar;
-
-
-
-// import React, { Component } from 'react';
-// import '../Styles/styles.css'
-// import ButtonIcon from '../Button/ButtonIcon';
-// import { ImSearch } from 'react-icons/im';
-
-// class Searchbar extends Component {
-//     state = {
-//         search: "",
-//     }
-
-//     hendleChange = ({ target }) => {
-//         const { name, value } = target;
-//         this.setState({ [name]: value });
-//     }
-
-//     hendleSubmit = e => {
-//         e.preventDefault();
-//         const { onSubmit } = this.props;
-//         onSubmit({ ...this.state });
-//         this.reset()
-//     }
-
-//     reset() {
-//         this.setState({
-//             search: "",
-//         })
-//     }
-
-//     render() {
-//         const { search } = this.state;
-//         const { hendleChange, hendleSubmit } = this;
-
-//         return (
-//             <header className="Searchbar">
-//                 <form className="SearchForm" onSubmit={hendleSubmit}>
-//                     <ButtonIcon
-//                         type="submit"
-//                         className="SearchForm-button"
-//                     >
-//                         <ImSearch />
-//                         <span className="SearchForm-button-label">Search</span>
-//                     </ButtonIcon>
-//                     <input
-//                         className="SearchForm-input"
-//                         name="search"
-//                         type="text"
-//                         value={search}
-//                         onChange={hendleChange}
-//                         // autoComplete="off"
-//                         autoFocus
-//                         required
-//                         placeholder="Search images and photos"
-//                     />
-//                 </form>
-//             </header>
-//         )
-//     }
-// };
-
-// export default Searchbar;
