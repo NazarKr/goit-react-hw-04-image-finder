@@ -1,24 +1,25 @@
-import { useState, useCallback } from 'react';
+// import { useState, useCallback } from 'react';
+import useForm from '../share/hooks/useForm'
 import ButtonIcon from '../share/Button/ButtonIcon';
 import { ImSearch } from 'react-icons/im';
 
 const initialState = { search: '' };
 
 const Searchbar = ({ onSubmit }) => {
-    const [state, setState] = useState({ ...initialState });
+    const { state, handleChange, hendleSubmit } = useForm({ initialState, onSubmit });
 
-    const handleChange = useCallback(e => {
-        const { name, value } = e.target;
-        setState(prevState => {
-            return { ...prevState, [name]: value };
-        });
-    }, []);
+    // const handleChange = useCallback(e => {
+    //     const { name, value } = e.target;
+    //     setState(prevState => {
+    //         return { ...prevState, [name]: value };
+    //     });
+    // }, []);
 
-    function hendleSubmit(e) {
-        e.preventDefault();
-        onSubmit(state.search);
-        setState({ ...initialState });
-    }
+    // function hendleSubmit(e) {
+    //     e.preventDefault();
+    //     onSubmit(state.search);
+    //     setState({ ...initialState });
+    // }
 
     const { search } = state;
 
