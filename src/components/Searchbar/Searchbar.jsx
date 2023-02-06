@@ -1,60 +1,39 @@
-import React, { Component } from 'react';
-import '../Styles/styles.css'
-import ButtonIcon from '../Button/ButtonIcon';
+import { memo } from "react";
+import useForm from '../share/hooks/useForm'
+import ButtonIcon from '../share/Button/ButtonIcon';
 import { ImSearch } from 'react-icons/im';
 
-class Searchbar extends Component {
-    state = {
-        search: "",
-    }
+const initialState = { search: '' };
 
-    hendleChange = ({ target }) => {
-        const { name, value } = target;
-        this.setState({ [name]: value });
-    }
+const Searchbar = ({ onSubmit }) => {
+    const { state, handleChange, hendleSubmit } = useForm({ initialState, onSubmit });
 
-    hendleSubmit = e => {
-        e.preventDefault();
-        const { onSubmit } = this.props;
-        onSubmit({ ...this.state });
-        this.reset()
-    }
+    const { search } = state;
 
-    reset() {
-        this.setState({
-            search: "",
-        })
-    }
+    return (
+        <header className="Searchbar">
+            <form className="SearchForm" onSubmit={hendleSubmit}>
+                <ButtonIcon
+                    type="submit"
+                    className="SearchForm-button"
+                >
+                    <ImSearch />
+                    <span className="SearchForm-button-label">Search</span>
+                </ButtonIcon>
+                <input
+                    className="SearchForm-input"
+                    name="search"
+                    type="text"
+                    value={search}
+                    onChange={handleChange}
+                    // autoComplete="off"
+                    autoFocus
+                    required
+                    placeholder="Search images and photos"
+                />
+            </form>
+        </header>
+    )
+}
 
-    render() {
-        const { search } = this.state;
-        const { hendleChange, hendleSubmit } = this;
-
-        return (
-            <header className="Searchbar">
-                <form className="SearchForm" onSubmit={hendleSubmit}>
-                    <ButtonIcon
-                        type="submit"
-                        className="SearchForm-button"
-                    >
-                        <ImSearch />
-                        <span className="SearchForm-button-label">Search</span>
-                    </ButtonIcon>
-                    <input
-                        className="SearchForm-input"
-                        name="search"
-                        type="text"
-                        value={search}
-                        onChange={hendleChange}
-                        // autoComplete="off"
-                        autoFocus
-                        required
-                        placeholder="Search images and photos"
-                    />
-                </form>
-            </header>
-        )
-    }
-};
-
-export default Searchbar;
+export default memo(Searchbar);

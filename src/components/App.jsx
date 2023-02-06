@@ -1,94 +1,80 @@
-import React, { Component } from 'react';
-import './Styles/styles.css'
+import React from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import Searchbar from './Searchbar/Searchbar';
 import ImageGallery from './ImageGallery/ImageGallery';
-import ModalWindow from './Modal/ModalWindow';
-import Spinner from './Loader/Spinner';
-import { fetchImages } from '../components/Servises/images-api'
+import ModalWindow from '../components/share/Modal/ModalWindow';
+import Spinner from './share/Loader/Spinner';
+import { fetchImages } from '../components/share/Servises/images-api'
 
-export class App extends Component {
-  state = {
-    search: '',
-    items: [],
-    loading: false,
-    error: null,
-    page: 1,
-    showModal: false,
-    modalImg: null,
-    imageDetails: null,
-  }
-  
-  componentDidUpdate(prevProps, prevState) {
-    const { fetchData } = this;
-    const { search, page } = this.state;
+export const App = () => {
+  const [search, setSearch] = useState('');
+  const [items, setItems] = useState([]);
+  const [page, setPage] = useState(1);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [showModal, setModal] = useState(false);
+  const [modalImg, setModalImg] = useState(null);
 
-    if (prevState.search !== search || prevState.page !== page) {
-      fetchData();
+  useEffect(() => {
+    if (!search) {
+      return;
     }
-  }
 
-  fetchData = async (search, pege, perPage) => {
-    try {
-      this.setState({ loading: true });
-      const { search, page } = this.state;
-      const { hits } = await fetchImages(search, page);
-      this.setState(({ items }) => ({
-        items: [...items, ...hits]
-      }))
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        const { hits } = await fetchImages(search, page);
+        setItems(prevItems => ([...prevItems, ...hits]))
+      }
+      catch (error) {
+        setError(error.massage);
+      }
+      finally {
+        setLoading(false);
+      }
     }
-    catch (error) {
-      this.setState({error: error.massage})
-    }
-    finally {
-      this.setState({loading:false})
-    }
-  }
+    fetchData();
+  }, [page, search]);
 
-  searchImages = ({ search }) => {
-    this.setState({ search, items: [], page: 1 });
-  }
-
-  setModalImg = imageObj => {
-    this.setState({ modalImg: imageObj });
+  const searchImages = search => {
+    setSearch(search);
+    setItems([]);
+    setPage(1);
   };
-  
-  loadMore = () => {
-    const { page } = this.state;
-    this.setState({page: page +1})
+
+  const loadMore = useCallback(() => {
+    setPage(prevPage => prevPage + 1)
+  }, []);
+
+  const toggleModal = useCallback(() => {
+    setModal(prevState => !prevState)
+  }, [])
+
+  const addModalImg = modalImg => {
+    setModalImg(modalImg)
   }
 
-  toggleModal = () => {
-    this.setState(({ showModal }) => ({
-      showModal: !showModal,
-    }))
-  }
+  return (
+    <div className='App'>
+      <Searchbar onSubmit={searchImages} />
 
-  render() {
-    const { items, loading, error, showModal, modalImg, page } = this.state;
-    const { searchImages, loadMore, toggleModal, setModalImg } = this;
+      <ImageGallery
+        items={items}
+        onClick={toggleModal}
+        setImg={addModalImg}
+        loading={loading}
+        loadMore={loadMore}
+        pege={page}
+      />
 
-    return (
-      <div className='App'>
-        <Searchbar onSubmit={searchImages} />
-        
-        <ImageGallery
-          items={items}
+      {loading && <Spinner />}
+
+      {error && <p>{error}</p>}
+      {showModal && (
+        <ModalWindow
           onClick={toggleModal}
-          setImg={setModalImg}
-          loading={loading}
-          loadMore={loadMore}
-          pege={page}
-        />
-
-        {loading && <Spinner/>}
-
-        {error && <p>{error}</p>}
-        {showModal && (
-          <ModalWindow
-            onClick={toggleModal}
-            children={<img src={modalImg.img} alt={modalImg.alt} />} >
+          children={<img src={modalImg.img} alt={modalImg.alt} />} >
         </ModalWindow>)}
-      </div>
-    )
-  }
+    </div>
+  )
 };
