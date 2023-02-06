@@ -1,4 +1,4 @@
-// import { useState, useCallback } from 'react';
+import { memo } from "react";
 import useForm from '../share/hooks/useForm'
 import ButtonIcon from '../share/Button/ButtonIcon';
 import { ImSearch } from 'react-icons/im';
@@ -49,4 +49,4 @@ const Searchbar = ({ onSubmit }) => {
     )
 }
 
-export default Searchbar;
+export default memo(Searchbar);
